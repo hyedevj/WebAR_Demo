@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>WebAR 터치로 3D 모델 띄우기</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #instructions {
+      position: absolute;
+      top: 10px; left: 10px;
+      color: white;
+      font-size: 18px;
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div id="instructions">화면을 터치하여 3D 구체를 띄우세요.</div>
+
+  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono_and_matrix;">
+    <!-- 3D 구체, 초기에는 숨김 -->
+    <a-sphere 
+      id="mySphere" 
+      position="0 0 -3" 
+      radius="0.5" 
+      color="#FF5733" 
+      visible="false"
+    ></a-sphere>
+
+    <!-- 카메라 -->
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    const sphere = document.getElementById('mySphere');
+    const instructions = document.getElementById('instructions');
+    let shown = false;
+
+    // 화면 최초 터치 시 구체 보이기
+    window.addEventListener('click', () => {
+      if (!shown) {
+        sphere.setAttribute('visible', 'true');
+        instructions.style.display = 'none';
+        shown = true;
+      }
+    });
+  </script>
+</body>
+</html>
