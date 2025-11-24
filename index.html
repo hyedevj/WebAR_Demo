@@ -17,7 +17,7 @@
     <!-- 안내 문구 -->
     <div id="instructions" onclick="startAR()">클릭하시오</div>
 
-    <!-- UI 버튼 -->
+    <!-- UI 버튼 (초기에는 숨김) -->
     <div class="controls" style="display:none;">
       <h3>질감 선택</h3>
       <button onclick="setTexture('smooth')">매끈</button>
@@ -30,7 +30,6 @@
 
     <!-- AR 장면 -->
     <a-scene
-      embedded
       vr-mode-ui="enabled: false"
       renderer="logarithmicDepthBuffer: true;"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
@@ -61,8 +60,11 @@
     <script>
       // 클릭 시 AR Sphere + UI 표시
       function startAR() {
+        // 안내 문구 숨기기
         document.getElementById("instructions").style.display = "none";
+        // 3D Sphere 등장
         document.getElementById("arSphere").setAttribute("visible", true);
+        // UI 버튼 나타나기
         document.querySelector(".controls").style.display = "block";
       }
 
