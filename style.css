@@ -1,5 +1,7 @@
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%;
   overflow: hidden;
   font-family: sans-serif;
 }
@@ -7,8 +9,7 @@ body {
 /* AR 장면 전체 화면 */
 a-scene {
   width: 100%;
-  height: 100vh;
-  z-index: 0;
+  height: 100%;
   border: none; /* 흰색 줄 제거 */
   margin: 0;
 }
