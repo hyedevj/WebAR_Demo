@@ -42,11 +42,19 @@
     renderer="logarithmicDepthBuffer: true;"
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
+
+  <a-assets>
+  <img id="texSmooth" src="textures/smooth.jpg">
+  <img id="texRough" src="textures/rough.jpg">
+  <img id="texReflect" src="textures/reflect.jpg">
+</a-assets>
+
     <!-- Sphere: 마커 없이 카메라 앞 -->
     <a-sphere
       id="arSphere"
       position="0 0 -2"
-      radius="0.3"
+      radius="0.5"
+      scale="1 1 1"
       color="#FFAA00"
       visible="false"
       material="roughness:0.5; metalness:0.5;"
@@ -103,4 +111,7 @@
     });
   </script>
 </body>
+
+<script src="script.js"></script>
+
 </html>
