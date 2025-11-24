@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>WebAR 질감 & 광량 조절</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>WebAR 질감 실험</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -17,13 +17,13 @@
 </head>
 <body>
 
-  <!-- 제목 고정 -->
-  <div id="title">WebAR 모델 질감 & 광량 실험</div>
+  <!-- 제목 -->
+  <div id="title">WebAR 모델 질감 실험</div>
 
-  <!-- 안내 문구 -->
+  <!-- 클릭 안내 -->
   <div id="instructions" onclick="startAR()">클릭하시오</div>
 
-  <!-- UI 버튼/슬라이더 (초기 숨김) -->
+  <!-- UI 버튼/슬라이더 -->
   <div class="controls" style="display:none;">
     <h3>질감 선택</h3>
     <button onclick="setTexture('smooth')">매끈</button>
@@ -34,84 +34,49 @@
     <div id="lightRange"></div>
   </div>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-
   <!-- AR 장면 -->
   <a-scene
     vr-mode-ui="enabled: false"
     renderer="logarithmicDepthBuffer: true;"
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
+    <!-- 텍스처 -->
+    <a-assets>
+    <!-- Reflect -->
+      <img id="textReflectColor" src="textures/reflect/Color.jpg">
+      <img id="textReflectDisplacement" src="textures/reflect/Displacement.jpg">
+      <img id="textReflectMetalness" src="textures/reflect/Metalness.jpg">
+      <img id="textReflectRoughness" src="textures/reflect/Roughness.jpg">
+      <img id="textReflectNormalDX" src="textures/reflect/NormalDX.jpg">
+      <img id="textReflectNormalGL" src="textures/reflect/NormalGL.jpg">
 
-  <a-assets>
-  <img id="texSmooth" src="textures/smooth.jpg">
-  <img id="texRough" src="textures/rough.jpg">
-  <img id="texReflect" src="textures/reflect.jpg">
-</a-assets>
+      <!-- Rough (Color만) -->
+      <img id="texRoughColor" src="textures/rough.jpg">
 
-    <!-- Sphere: 마커 없이 카메라 앞 -->
+      <!-- Smooth -->
+      <img id="textSmoothColor" src="textures/smooth.jpg">
+    </a-assets>
+
+    <!-- Sphere -->
     <a-sphere
       id="arSphere"
-      position="0 0 -2"
       radius="0.5"
+      position="0 0 -2"
       scale="1 1 1"
-      color="#FFAA00"
       visible="false"
-      material="roughness:0.5; metalness:0.5;"
+      material="src: #texSmoothColor; normalMap: #texSmoothNormal; roughnessMap: #texSmoothRough; metalnessMap: #texSmoothMetal;"
     ></a-sphere>
 
-    <a-entity camera></a-entity>
-
-    <!-- 기본 조명 -->
+    <!-- 광원 -->
     <a-entity
       id="sceneLight"
       light="type: directional; color: white; intensity: 1"
-      position="0 2 1"
+      position="1 3 2"
     ></a-entity>
+
+    <a-entity camera></a-entity>
   </a-scene>
 
-  <script>
-    // 클릭 시 Sphere + UI 나타나기
-    function startAR() {
-      document.getElementById("instructions").style.display = "none";
-      document.getElementById("arSphere").setAttribute("visible", true);
-      document.querySelector(".controls").style.display = "block";
-    }
-
-    // 질감 변경
-    function setTexture(type) {
-      const model = document.getElementById("arSphere");
-      switch(type){
-        case "smooth":
-          model.setAttribute("material","roughness:0.1; metalness:0.2; color:#CCCCCC");
-          break;
-        case "rough":
-          model.setAttribute("material","roughness:1.0; metalness:0.1; color:#888888");
-          break;
-        case "reflect":
-          model.setAttribute("material","roughness:0.05; metalness:1.0; color:#EEEEEE");
-          break;
-      }
-    }
-
-    // noUiSlider 생성: 두 핸들
-    var slider = document.getElementById('lightRange');
-    noUiSlider.create(slider, {
-      start: [0.5, 2],
-      connect: true,
-      range: { min: 0, max: 3 },
-      step: 0.1
-    });
-
-    slider.noUiSlider.on('update', function(values){
-      const light = document.getElementById("sceneLight");
-      // 두 핸들 값 평균으로 intensity 설정
-      const intensity = (parseFloat(values[0]) + parseFloat(values[1])) / 2;
-      light.setAttribute("light","intensity", intensity);
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
-
-<script src="script.js"></script>
-
 </html>
