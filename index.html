@@ -3,89 +3,88 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AR 모델 질감 & 광량 조절</title>
-    
+    <title>WebAR 질감 & 광량 조절</title>
+
     <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <!-- AR.js -->
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
-    
+
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <!-- 설명 -->
-    <div id="instructions">질감과 광량을 조절해보세요.</div>
-
-    <!-- A-Frame AR 장면 -->
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      renderer="logarithmicDepthBuffer: true;"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-    >
-      <!-- glTF 모델 등록 -->
-      <a-assets>
-        <a-asset-item id="model" src="model/your_model.gltf"></a-asset-item>
-      </a-assets>
-
-      <!-- AR 마커 -->
-      <a-marker preset="hiro">
-        <a-entity
-          id="modelEntity"
-          gltf-model="#model"
-          position="0 0 0"
-          material="roughness: 0.5; metalness: 0.5; color: #AAAAAA"
-        ></a-entity>
-      </a-marker>
-
-      <!-- 조명 -->
-      <a-entity
-        id="sceneLight"
-        light="type: directional; color: white; intensity: 1"
-        position="0 2 1"
-      ></a-entity>
-
-      <a-entity camera></a-entity>
-    </a-scene>
+    <!-- 안내 문구 -->
+    <div id="instructions" onclick="startAR()">클릭하시오</div>
 
     <!-- UI 버튼 -->
-    <div class="controls">
+    <div class="controls" style="display:none;">
       <h3>질감 선택</h3>
       <button onclick="setTexture('smooth')">매끈</button>
       <button onclick="setTexture('rough')">거침</button>
       <button onclick="setTexture('reflect')">반사</button>
 
       <h3>광량 조절</h3>
-      <input
-        type="range"
-        min="0"
-        max="3"
-        step="0.1"
-        value="1"
-        onchange="changeLight(this.value)"
-      />
+      <input type="range" min="0" max="3" step="0.1" value="1" onchange="changeLight(this.value)" />
     </div>
 
-    <script>
-      function setTexture(type) {
-        const model = document.querySelector("#modelEntity");
+    <!-- AR 장면 -->
+    <a-scene
+      embedded
+      vr-mode-ui="enabled: false"
+      renderer="logarithmicDepthBuffer: true;"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
+      <!-- 마커 -->
+      <a-marker preset="hiro">
+        <!-- 테스트용 Sphere -->
+        <a-sphere
+          id="arSphere"
+          position="0 0.5 0"
+          radius="0.5"
+          color="#FFAA00"
+          visible="false"
+          material="roughness:0.5; metalness:0.5;"
+        ></a-sphere>
+      </a-marker>
 
+      <a-entity camera></a-entity>
+
+      <!-- 기본 조명 -->
+      <a-entity
+        id="sceneLight"
+        light="type: directional; color: white; intensity: 1"
+        position="0 2 1"
+      ></a-entity>
+    </a-scene>
+
+    <script>
+      // 클릭 시 AR Sphere + UI 표시
+      function startAR() {
+        document.getElementById("instructions").style.display = "none";
+        document.getElementById("arSphere").setAttribute("visible", true);
+        document.querySelector(".controls").style.display = "block";
+      }
+
+      // 질감 변경
+      function setTexture(type) {
+        const model = document.getElementById("arSphere");
         switch (type) {
           case "smooth":
-            model.setAttribute("material", "roughness: 0.1; metalness: 0.2; color: #CCCCCC");
+            model.setAttribute("material", "roughness:0.1; metalness:0.2; color:#CCCCCC");
             break;
           case "rough":
-            model.setAttribute("material", "roughness: 1.0; metalness: 0.1; color: #888888");
+            model.setAttribute("material", "roughness:1.0; metalness:0.1; color:#888888");
             break;
           case "reflect":
-            model.setAttribute("material", "roughness: 0.05; metalness: 1.0; color: #EEEEEE");
+            model.setAttribute("material", "roughness:0.05; metalness:1.0; color:#EEEEEE");
             break;
         }
       }
 
+      // 광량 조절
       function changeLight(intensity) {
-        const light = document.querySelector("#sceneLight");
+        const light = document.getElementById("sceneLight");
         light.setAttribute("light", "intensity", intensity);
       }
     </script>
