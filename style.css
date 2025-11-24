@@ -4,14 +4,13 @@ body {
   font-family: sans-serif;
 }
 
-/* AR 장면 영역 */
+/* AR 장면 전체 화면 */
 a-scene {
-  position: relative;
   width: 100%;
-  height: 400px; /* 원하는 높이 */
+  height: 100vh;
   z-index: 0;
-  border: 1px solid #ccc; /* 영역 확인용 */
-  margin: 20px auto;
+  border: none; /* 흰색 줄 제거 */
+  margin: 0;
 }
 
 /* 제목 고정 */
@@ -30,7 +29,7 @@ a-scene {
 
 /* 안내 문구 */
 #instructions {
-  position: fixed;       /* 카메라 켜도 사라지지 않음 */
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -46,7 +45,7 @@ a-scene {
 
 /* UI 버튼/슬라이더 */
 .controls {
-  position: fixed;       /* 화면 하단 고정 */
+  position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -63,6 +62,8 @@ button {
   font-size: 14px;
 }
 
-input[type="range"] {
-  width: 200px;
+/* noUiSlider 스타일 (기본) */
+#lightRange {
+  margin-top: 10px;
+  width: 250px;
 }

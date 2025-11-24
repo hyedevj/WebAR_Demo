@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>WebAR 질감 & 광량 조절</title>
 
@@ -9,26 +9,29 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <!-- AR.js -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  <!-- noUiSlider -->
+  <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <!-- 제목 -->
+
+  <!-- 제목 고정 -->
   <div id="title">WebAR 모델 질감 & 광량 실험</div>
 
   <!-- 안내 문구 -->
   <div id="instructions" onclick="startAR()">클릭하시오</div>
 
-  <!-- UI 버튼 (초기에는 숨김) -->
+  <!-- UI 버튼/슬라이더 (초기 숨김) -->
   <div class="controls" style="display:none;">
     <h3>질감 선택</h3>
     <button onclick="setTexture('smooth')">매끈</button>
     <button onclick="setTexture('rough')">거침</button>
     <button onclick="setTexture('reflect')">반사</button>
 
-    <h3>광량 조절</h3>
-    <input type="range" min="0" max="3" step="0.1" value="1" onchange="changeLight(this.value)" />
+    <h3>광량 범위 조절</h3>
+    <div id="lightRange"></div>
   </div>
 
   <!-- AR 장면 -->
@@ -37,11 +40,11 @@
     renderer="logarithmicDepthBuffer: true;"
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
   >
-    <!-- 테스트용 Sphere (마커 없이 화면 중앙) -->
+    <!-- Sphere: 마커 없이 카메라 앞 -->
     <a-sphere
       id="arSphere"
       position="0 1.5 -3"
-      radius="0.5"
+      radius="0.3"
       color="#FFAA00"
       visible="false"
       material="roughness:0.5; metalness:0.5;"
@@ -58,7 +61,7 @@
   </a-scene>
 
   <script>
-    // 클릭 시 AR Sphere + UI 표시
+    // 클릭 시 Sphere + UI 나타나기
     function startAR() {
       document.getElementById("instructions").style.display = "none";
       document.getElementById("arSphere").setAttribute("visible", true);
@@ -68,24 +71,34 @@
     // 질감 변경
     function setTexture(type) {
       const model = document.getElementById("arSphere");
-      switch (type) {
+      switch(type){
         case "smooth":
-          model.setAttribute("material", "roughness:0.1; metalness:0.2; color:#CCCCCC");
+          model.setAttribute("material","roughness:0.1; metalness:0.2; color:#CCCCCC");
           break;
         case "rough":
-          model.setAttribute("material", "roughness:1.0; metalness:0.1; color:#888888");
+          model.setAttribute("material","roughness:1.0; metalness:0.1; color:#888888");
           break;
         case "reflect":
-          model.setAttribute("material", "roughness:0.05; metalness:1.0; color:#EEEEEE");
+          model.setAttribute("material","roughness:0.05; metalness:1.0; color:#EEEEEE");
           break;
       }
     }
 
-    // 광량 조절
-    function changeLight(intensity) {
+    // noUiSlider 생성: 두 핸들
+    var slider = document.getElementById('lightRange');
+    noUiSlider.create(slider, {
+      start: [0.5, 2],
+      connect: true,
+      range: { min: 0, max: 3 },
+      step: 0.1
+    });
+
+    slider.noUiSlider.on('update', function(values){
       const light = document.getElementById("sceneLight");
-      light.setAttribute("light", "intensity", intensity);
-    }
+      // 두 핸들 값 평균으로 intensity 설정
+      const intensity = (parseFloat(values[0]) + parseFloat(values[1])) / 2;
+      light.setAttribute("light","intensity", intensity);
+    });
   </script>
 </body>
 </html>
